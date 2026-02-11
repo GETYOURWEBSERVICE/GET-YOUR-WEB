@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { db } from '../firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 
@@ -31,13 +31,13 @@ const Work = () => {
         {
             title: "Luminal SaaS Platform",
             category: "UI/UX Design • Fullstack",
-            image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80",
+            image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800&ls=75",
             description: "A high-performance analytics dashboard for industrial operations."
         },
         {
             title: "NexGen E-Commerce",
             category: "Mobile Design • React Native",
-            image: "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&q=80",
+            image: "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&q=80&w=800&ls=75",
             description: "A seamless shopping experience built for modern consumers."
         }
     ];
@@ -48,7 +48,7 @@ const Work = () => {
         <section className="section" id="work">
             <div className="container">
                 <div style={{ marginBottom: '5rem' }}>
-                    <motion.p
+                    <m.p
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         style={{
@@ -61,7 +61,7 @@ const Work = () => {
                         }}
                     >
                         Success Stories
-                    </motion.p>
+                    </m.p>
                     <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', maxWidth: '800px' }}>
                         Selected <span className="gradient-text">Recent Work</span>
                     </h2>
@@ -69,7 +69,7 @@ const Work = () => {
 
                 <div className="grid-cols-2" style={{ gap: '3.5rem' }}>
                     {displayProjects.map((project, index) => (
-                        <motion.div
+                        <m.div
                             key={project.id || index}
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -79,11 +79,12 @@ const Work = () => {
                             style={{ padding: '0', overflow: 'hidden', cursor: 'pointer' }}
                         >
                             <div style={{ overflow: 'hidden', aspectRatio: '16/10' }}>
-                                <motion.img
+                                <m.img
                                     whileHover={{ scale: 1.05 }}
                                     transition={{ duration: 0.6 }}
                                     src={project.image}
                                     alt={project.title}
+                                    loading="lazy"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
                             </div>
@@ -94,7 +95,7 @@ const Work = () => {
                                 <h3 style={{ fontSize: 'clamp(1.25rem, 5vw, 1.75rem)', marginBottom: '1rem', color: 'hsl(var(--foreground))' }}>{project.title}</h3>
                                 <p style={{ color: 'hsl(var(--muted-foreground))', lineHeight: 1.6, fontSize: '0.95rem' }}>{project.description}</p>
                             </div>
-                        </motion.div>
+                        </m.div>
                     ))}
                 </div>
             </div>

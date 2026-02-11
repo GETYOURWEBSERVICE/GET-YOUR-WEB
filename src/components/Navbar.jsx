@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { ChevronDown, Menu, X, Smartphone, Globe, Calendar, LogIn, LogOut, User as UserIcon, ShoppingBag } from 'lucide-react';
+import { ChevronDown, Menu, X, Smartphone, Globe, Calendar, LogIn, LogOut, User as UserIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
-import { useCart } from '../contexts/CartContext';
 
 const Navbar = () => {
   const { currentUser, isAdmin, loginWithGoogle, logout } = useAuth();
-  const { cart } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -29,14 +27,6 @@ const Navbar = () => {
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Our Work', href: '/#work' },
-    {
-      name: 'Shop',
-      href: '#',
-      dropdown: [
-        { name: 'App Development', href: '/shop-app', icon: <Smartphone size={16} /> },
-        { name: 'Website Development', href: '/shop-web', icon: <Globe size={16} /> },
-      ],
-    },
     { name: 'Policy', href: '/#policy' },
     { name: 'Blog', href: '/blog' },
   ];
@@ -211,33 +201,7 @@ const Navbar = () => {
               </button>
             )}
 
-            <Link
-              to="/checkout"
-              style={{ position: 'relative', color: 'hsl(var(--foreground))', display: 'flex', alignItems: 'center' }}
-              title="View Cart"
-            >
-              <ShoppingBag size={20} />
-              {cart.length > 0 && (
-                <span style={{
-                  position: 'absolute',
-                  top: '-8px',
-                  right: '-8px',
-                  background: 'hsl(var(--primary))',
-                  color: 'hsl(var(--primary-foreground))',
-                  fontSize: '0.65rem',
-                  fontWeight: 900,
-                  width: '18px',
-                  height: '18px',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 10px rgba(45, 100, 50, 0.2)'
-                }}>
-                  {cart.length}
-                </span>
-              )}
-            </Link>
+            {/* Cart link removed */}
 
             <Link to="/book-meet">
               <button className="btn-primary" style={{ padding: '0.6rem 1.5rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -249,31 +213,7 @@ const Navbar = () => {
 
         {/* Mobile Navbar Right Section */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} className="mobile-only">
-          <Link
-            to="/checkout"
-            style={{ position: 'relative', color: 'hsl(var(--foreground))', display: 'flex', alignItems: 'center' }}
-          >
-            <ShoppingBag size={22} />
-            {cart.length > 0 && (
-              <span style={{
-                position: 'absolute',
-                top: '-8px',
-                right: '-8px',
-                background: 'hsl(var(--primary))',
-                color: 'hsl(var(--primary-foreground))',
-                fontSize: '0.6rem',
-                fontWeight: 900,
-                width: '16px',
-                height: '16px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                {cart.length}
-              </span>
-            )}
-          </Link>
+          {/* Mobile Cart link removed */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="mobile-toggle"

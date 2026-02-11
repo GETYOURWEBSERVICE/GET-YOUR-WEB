@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { m, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
     const containerRef = useRef(null);
+    const navigate = useNavigate();
     const { scrollY } = useScroll();
 
     // Parallax effects
@@ -24,7 +26,7 @@ const Hero = () => {
             }}
         >
             {/* Dynamic Animated Blobs */}
-            <motion.div
+            <m.div
                 animate={{
                     scale: [1, 1.2, 1],
                     x: [0, 50, 0],
@@ -45,7 +47,7 @@ const Hero = () => {
                 }}
             />
 
-            <motion.div
+            <m.div
                 animate={{
                     scale: [1, 1.3, 1],
                     x: [0, -60, 0],
@@ -67,7 +69,7 @@ const Hero = () => {
             />
 
             {/* Decorative Floating Elements */}
-            <motion.div
+            <m.div
                 style={{
                     position: 'absolute',
                     top: '20%',
@@ -82,7 +84,7 @@ const Hero = () => {
                 }}
             />
 
-            <motion.div
+            <m.div
                 animate={{
                     y: [0, -20, 0],
                     rotate: [45, 60, 45]
@@ -100,7 +102,7 @@ const Hero = () => {
                 }}
             />
 
-            <motion.div
+            <m.div
                 animate={{
                     x: [0, 30, 0],
                     scale: [1, 1.1, 1]
@@ -124,7 +126,7 @@ const Hero = () => {
                 zIndex: 1,
                 paddingTop: 'clamp(5rem, 15vh, 8rem)' // Increased from 3rem
             }}>
-                <motion.div
+                <m.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
@@ -155,16 +157,25 @@ const Hero = () => {
                     </p>
 
                     <div className="mobile-stack" style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-                        <motion.button
+                        <m.button
                             whileHover={{ scale: 1.05, boxShadow: '0 15px 30px hsla(45, 100%, 50%, 0.4)' }}
                             whileTap={{ scale: 0.95 }}
                             className="btn-primary"
+                            onClick={() => {
+                                const el = document.getElementById('work');
+                                if (el) {
+                                    el.scrollIntoView({ behavior: 'smooth' });
+                                } else {
+                                    navigate('/#work');
+                                }
+                            }}
                         >
-                            Shop Now
-                        </motion.button>
-                        <motion.button
-                            whileHover={{ backgroundColor: 'hsla(45, 100%, 50%, 0.1)', borderColor: 'hsl(var(--primary))', x: 5 }}
-                            transition={{ type: 'spring', stiffness: 300 }}
+                            Shop Projects
+                        </m.button>
+                        <m.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => navigate('/book-meet')}
                             style={{
                                 padding: '1rem 2rem',
                                 fontWeight: 700,
@@ -177,10 +188,10 @@ const Hero = () => {
                                 gap: '8px'
                             }}
                         >
-                            Contact Now <span style={{ fontSize: '1.2rem' }}>→</span>
-                        </motion.button>
+                            Contact Us <span style={{ fontSize: '1.2rem' }}>→</span>
+                        </m.button>
                     </div>
-                </motion.div>
+                </m.div>
             </div>
 
         </section>

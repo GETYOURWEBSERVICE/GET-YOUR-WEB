@@ -1,8 +1,8 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Check, Star } from 'lucide-react';
 
 const Pricing = () => {
+    const navigate = useNavigate();
     const packages = [
         {
             name: "Social Management",
@@ -146,6 +146,7 @@ const Pricing = () => {
                             <motion.button
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
+                                onClick={() => navigate('/book-meet')}
                                 style={{
                                     width: '100%',
                                     padding: '1rem',
@@ -158,7 +159,7 @@ const Pricing = () => {
                                     boxShadow: pkg.highlight ? '0 15px 30px rgba(45, 100, 50, 0.3)' : 'none'
                                 }}
                             >
-                                Choose Plan
+                                Contact Us
                             </motion.button>
                         </motion.div>
                     ))}
