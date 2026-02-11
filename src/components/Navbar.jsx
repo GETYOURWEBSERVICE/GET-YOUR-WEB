@@ -27,6 +27,14 @@ const Navbar = () => {
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Our Work', href: '/#work' },
+    {
+      name: 'Shop',
+      href: '#',
+      dropdown: [
+        { name: 'App Development', href: '/shop-app', icon: <Smartphone size={16} /> },
+        { name: 'Website Development', href: '/shop-web', icon: <Globe size={16} /> },
+      ],
+    },
     { name: 'Policy', href: '/#policy' },
     { name: 'Blog', href: '/blog' },
   ];

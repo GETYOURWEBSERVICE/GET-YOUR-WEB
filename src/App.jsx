@@ -8,6 +8,8 @@ import SecurityGuard from './components/SecurityGuard';
 
 // Lazy load page components
 const Home = React.lazy(() => import('./pages/Home'));
+const AppShop = React.lazy(() => import('./pages/AppShop'));
+const WebShop = React.lazy(() => import('./pages/WebShop'));
 const BookMeet = React.lazy(() => import('./pages/BookMeet'));
 const Admin = React.lazy(() => import('./pages/Admin'));
 const Blog = React.lazy(() => import('./pages/Blog'));
@@ -64,6 +66,8 @@ function App() {
               <React.Suspense fallback={<LoadingFallback />}>
                 <Routes>
                   <Route path="/" element={<Home />} />
+                  <Route path="/shop-app" element={<AppShop />} />
+                  <Route path="/shop-web" element={<WebShop />} />
                   <Route path="/book-meet" element={<BookMeet />} />
                   <Route path="/admin" element={<Admin />} />
                   <Route path="/blog" element={<Blog />} />
