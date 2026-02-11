@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { m } from 'framer-motion';
 import { Check, Star } from 'lucide-react';
 
 const Pricing = () => {
@@ -44,14 +45,14 @@ const Pricing = () => {
                 }} />
 
                 <div style={{ textAlign: 'center', marginBottom: '5rem', position: 'relative', zIndex: 1 }}>
-                    <motion.h2
+                    <m.h2
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         style={{ fontSize: '3rem', marginBottom: '1.5rem', color: 'hsl(var(--foreground))' }}
                     >
                         Invest in Your <span className="gradient-text">Growth</span>
-                    </motion.h2>
+                    </m.h2>
                     <p style={{ color: 'hsl(var(--muted-foreground))', maxWidth: '550px', margin: '0 auto', fontSize: '1.1rem' }}>
                         Transparent pricing without the hidden surprises. Choose the plan that fuels your vision.
                     </p>
@@ -59,7 +60,7 @@ const Pricing = () => {
 
                 <div className="grid-cols-2" style={{ maxWidth: '1000px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
                     {packages.map((pkg, idx) => (
-                        <motion.div
+                        <m.div
                             key={idx}
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -143,7 +144,7 @@ const Pricing = () => {
                                 ))}
                             </div>
 
-                            <motion.button
+                            <m.button
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => navigate('/book-meet')}
@@ -160,8 +161,8 @@ const Pricing = () => {
                                 }}
                             >
                                 Contact Us
-                            </motion.button>
-                        </motion.div>
+                            </m.button>
+                        </m.div>
                     ))}
                 </div>
             </div>
