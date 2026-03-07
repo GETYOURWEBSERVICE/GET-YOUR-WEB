@@ -13,15 +13,29 @@ const AppShop = () => {
     useEffect(() => {
         const fetchAppProducts = async () => {
             try {
-                const q = query(collection(db, 'appProducts'), orderBy('createdAt', 'desc'));
-                const snapshot = await getDocs(q);
-                const products = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                    price: doc.data().cost || doc.data().price,
-                    features: Array.isArray(doc.data().features) ? doc.data().features : []
-                }));
-                setApps(products);
+                // Remove strict orderBy to ensure all items show up
+                const snapshot = await getDocs(collection(db, 'appProducts'));
+                const products = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: doc.id,
+                        ...data,
+                        title: data.title || data.name || "Untitled App",
+                        price: data.cost || data.price || "Contact for Price",
+                        features: Array.isArray(data.features) ? data.features : [],
+                        image: data.image || "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=800",
+                        createdAt: data.createdAt
+                    };
+                });
+
+                // Sort manually in JS
+                const sortedApps = products.sort((a, b) => {
+                    const timeA = a.createdAt?.seconds || 0;
+                    const timeB = b.createdAt?.seconds || 0;
+                    return timeB - timeA;
+                });
+
+                setApps(sortedApps);
             } catch (error) {
                 console.error("Error fetching app products:", error);
             } finally {

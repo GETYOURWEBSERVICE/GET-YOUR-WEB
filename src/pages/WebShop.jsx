@@ -13,16 +13,29 @@ const WebShop = () => {
     useEffect(() => {
         const fetchWebProducts = async () => {
             try {
-                const q = query(collection(db, 'webProducts'), orderBy('createdAt', 'desc'));
-                const snapshot = await getDocs(q);
-                const products = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                    // Map cost to price if needed, and ensure features is an array
-                    price: doc.data().cost || doc.data().price,
-                    features: Array.isArray(doc.data().features) ? doc.data().features : []
-                }));
-                setSolutions(products);
+                // Remove strict orderBy to ensure items without createdAt still show up
+                const snapshot = await getDocs(collection(db, 'webProducts'));
+                const products = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: doc.id,
+                        ...data,
+                        title: data.title || data.name || "Untitled Product",
+                        price: data.cost || data.price || "Contact for Price",
+                        features: Array.isArray(data.features) ? data.features : [],
+                        image: data.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
+                        createdAt: data.createdAt
+                    };
+                });
+
+                // Sort manually in JS to avoid Firestore query issues with missing fields
+                const sortedProducts = products.sort((a, b) => {
+                    const timeA = a.createdAt?.seconds || 0;
+                    const timeB = b.createdAt?.seconds || 0;
+                    return timeB - timeA;
+                });
+
+                setSolutions(sortedProducts);
             } catch (error) {
                 console.error("Error fetching web products:", error);
             } finally {
