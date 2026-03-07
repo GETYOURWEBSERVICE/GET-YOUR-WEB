@@ -124,7 +124,7 @@ const Hero = () => {
                 textAlign: 'left',
                 position: 'relative',
                 zIndex: 1,
-                paddingTop: 'clamp(5rem, 15vh, 8rem)' // Increased from 3rem
+                paddingTop: 'clamp(3rem, 8vh, 5rem)'
             }}>
                 <m.div
                     initial={{ opacity: 0, y: 50 }}
