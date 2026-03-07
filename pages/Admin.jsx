@@ -17,10 +17,11 @@ const Admin = () => {
     const [webProducts, setWebProducts] = useState([]);
     const [orders, setOrders] = useState([]);
     const [blogs, setBlogs] = useState([]);
+    const [citizens, setCitizens] = useState([]);
 
     // Form states
     const [formData, setFormData] = useState({
-        title: '', description: '', image: '', cost: '', link: '', category: ''
+        title: '', description: '', image: '', cost: '', link: '', category: '', role: '', name: ''
     });
 
     useEffect(() => {
@@ -45,6 +46,9 @@ const Admin = () => {
 
             const blogSnap = await getDocs(collection(db, 'blogs'));
             setBlogs(blogSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds));
+
+            const citizenSnap = await getDocs(collection(db, 'citizens'));
+            setCitizens(citizenSnap.docs.map(d => ({ id: d.id, ...d.data() })));
         } catch (error) {
             console.error("Fetch failed:", error);
         }
@@ -66,14 +70,15 @@ const Admin = () => {
         try {
             const collectionName = activeTab === 'projects' ? 'projects' :
                 activeTab === 'apps' ? 'appProducts' :
-                    activeTab === 'blogs' ? 'blogs' : 'webProducts';
+                    activeTab === 'blogs' ? 'blogs' :
+                        activeTab === 'citizens' ? 'citizens' : 'webProducts';
 
             await addDoc(collection(db, collectionName), {
                 ...formData,
                 createdAt: serverTimestamp()
             });
 
-            setFormData({ title: '', description: '', image: '', cost: '', link: '', category: '' });
+            setFormData({ title: '', description: '', image: '', cost: '', link: '', category: '', role: '', name: '' });
             fetchData();
             alert('Added successfully!');
         } catch (error) {
@@ -124,6 +129,7 @@ const Admin = () => {
                         { id: 'apps', label: 'App Shop', icon: <Smartphone size={18} /> },
                         { id: 'web', label: 'Web Shop', icon: <Globe size={18} /> },
                         { id: 'blogs', label: 'Blogs', icon: <BookOpen size={18} /> },
+                        { id: 'citizens', label: 'Citizens', icon: <Package size={18} /> },
                         { id: 'orders', label: 'Orders', icon: <ShoppingBag size={18} /> }
                     ].map(tab => (
                         <button
@@ -233,25 +239,34 @@ const Admin = () => {
                             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                                 <input
                                     required
-                                    value={formData.title}
-                                    onChange={e => setFormData({ ...formData, title: e.target.value })}
-                                    placeholder={activeTab === 'projects' ? "Project Title" : activeTab === 'blogs' ? "Post Title" : "Product Name"}
+                                    value={formData.title || formData.name}
+                                    onChange={e => setFormData({ ...formData, [activeTab === 'citizens' ? 'name' : 'title']: e.target.value })}
+                                    placeholder={activeTab === 'projects' ? "Project Title" : activeTab === 'blogs' ? "Post Title" : activeTab === 'citizens' ? "Full Name" : "Product Name"}
                                     style={{ padding: '1rem', borderRadius: '0.5rem', border: '1px solid hsl(var(--border))', background: 'transparent' }}
                                 />
                                 <textarea
                                     required
                                     value={formData.description}
                                     onChange={e => setFormData({ ...formData, description: e.target.value })}
-                                    placeholder={activeTab === 'blogs' ? "Post Content (HTML allowed)" : "Description/Excerpt"}
+                                    placeholder={activeTab === 'blogs' ? "Post Content (HTML allowed)" : activeTab === 'citizens' ? "Short Intro" : "Description/Excerpt"}
                                     rows={activeTab === 'blogs' ? 10 : 3}
                                     style={{ padding: '1rem', borderRadius: '0.5rem', border: '1px solid hsl(var(--border))', background: 'transparent', resize: 'vertical' }}
                                 />
-                                {activeTab !== 'projects' && activeTab !== 'blogs' && (
+                                {activeTab !== 'projects' && activeTab !== 'blogs' && activeTab !== 'citizens' && (
                                     <input
                                         required
                                         value={formData.cost}
                                         onChange={e => setFormData({ ...formData, cost: e.target.value })}
                                         placeholder="Cost (e.g. 1500)"
+                                        style={{ padding: '1rem', borderRadius: '0.5rem', border: '1px solid hsl(var(--border))', background: 'transparent' }}
+                                    />
+                                )}
+                                {activeTab === 'citizens' && (
+                                    <input
+                                        required
+                                        value={formData.role}
+                                        onChange={e => setFormData({ ...formData, role: e.target.value })}
+                                        placeholder="Role (e.g. UI/UX Designer)"
                                         style={{ padding: '1rem', borderRadius: '0.5rem', border: '1px solid hsl(var(--border))', background: 'transparent' }}
                                     />
                                 )}
@@ -287,24 +302,24 @@ const Admin = () => {
                         {/* List Section */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                             <h3 style={{ marginBottom: '1rem' }}>Current {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h3>
-                            {((activeTab === 'projects' ? projects : activeTab === 'apps' ? appProducts : activeTab === 'blogs' ? blogs : webProducts)).map((item) => (
+                            {((activeTab === 'projects' ? projects : activeTab === 'apps' ? appProducts : activeTab === 'blogs' ? blogs : activeTab === 'citizens' ? citizens : webProducts)).map((item) => (
                                 <div key={item.id} className="glass-card" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                                     <img src={item.image} alt={item.title || item.name} style={{ width: '80px', height: '60px', borderRadius: '0.5rem', objectFit: 'cover' }} />
                                     <div style={{ flex: 1 }}>
                                         <h4 style={{ margin: 0 }}>{item.title || item.name}</h4>
                                         <p style={{ margin: '4px 0', fontSize: '0.8rem', opacity: 0.6 }}>
-                                            {activeTab === 'projects' ? item.category : activeTab === 'blogs' ? new Date(item.createdAt?.seconds * 1000).toLocaleDateString() : `₹${item.cost || item.price}`}
+                                            {activeTab === 'projects' ? item.category : activeTab === 'citizens' ? item.role : activeTab === 'blogs' ? new Date(item.createdAt?.seconds * 1000).toLocaleDateString() : `₹${item.cost || item.price}`}
                                         </p>
                                     </div>
                                     <button
-                                        onClick={() => handleDelete(item.id, activeTab === 'projects' ? 'projects' : activeTab === 'apps' ? 'appProducts' : activeTab === 'blogs' ? 'blogs' : 'webProducts')}
+                                        onClick={() => handleDelete(item.id, activeTab === 'projects' ? 'projects' : activeTab === 'apps' ? 'appProducts' : activeTab === 'blogs' ? 'blogs' : activeTab === 'citizens' ? 'citizens' : 'webProducts')}
                                         style={{ color: '#ff4444', padding: '8px' }}
                                     >
                                         <Trash2 size={18} />
                                     </button>
                                 </div>
                             ))}
-                            {(activeTab === 'projects' ? projects : activeTab === 'apps' ? appProducts : webProducts).length === 0 && (
+                            {(activeTab === 'projects' ? projects : activeTab === 'apps' ? appProducts : activeTab === 'blogs' ? blogs : activeTab === 'citizens' ? citizens : webProducts).length === 0 && (
                                 <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center', borderRadius: 'var(--radius)', opacity: 0.5 }}>
                                     <Package size={40} style={{ marginBottom: '1rem' }} />
                                     <p>No items found in this category.</p>
