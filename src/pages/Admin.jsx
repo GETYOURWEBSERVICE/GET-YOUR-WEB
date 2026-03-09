@@ -73,31 +73,6 @@ const Admin = () => {
         setDataLoading(true);
 
         try {
-            let imageUrl = formData.image;
-
-            // Handle file upload if a file is selected
-            if (selectedFile) {
-                console.log("📤 Starting file upload:", selectedFile.name);
-                setUploading(true);
-                try {
-                    const storageRef = ref(storage, `${activeTab}/${Date.now()}_${selectedFile.name}`);
-                    const uploadSnap = await uploadBytes(storageRef, selectedFile);
-                    console.log("✅ Upload successful, snapshot:", uploadSnap);
-
-                    imageUrl = await getDownloadURL(uploadSnap.ref);
-                    console.log("🔗 Obtained download URL:", imageUrl);
-                } catch (uploadError) {
-                    console.error("❌ Storage Upload Error:", uploadError);
-                    alert("Upload Failed! Please check your Firebase Storage Rules. Details: " + uploadError.message);
-                    setUploading(false);
-                    setDataLoading(false);
-                    return; // Stop the rest of the submission
-                }
-                setUploading(false);
-            } else {
-                console.log("ℹ️ No file selected, using either URL or placeholder.");
-            }
-
             const collectionName = activeTab === 'projects' ? 'projects' :
                 activeTab === 'apps' ? 'appProducts' :
                     activeTab === 'blogs' ? 'blogs' :
@@ -106,13 +81,11 @@ const Admin = () => {
             console.log("📝 Adding document to collection:", collectionName);
             await addDoc(collection(db, collectionName), {
                 ...formData,
-                image: imageUrl,
                 createdAt: serverTimestamp()
             });
 
             console.log("🎉 Document successfully added!");
             setFormData({ title: '', description: '', image: '', cost: '', link: '', category: '', role: '', name: '' });
-            setSelectedFile(null);
             fetchData();
             alert('Added successfully!');
         } catch (error) {
@@ -120,7 +93,6 @@ const Admin = () => {
             alert('Error adding item: ' + error.message);
         } finally {
             setDataLoading(false);
-            setUploading(false);
         }
     };
 
@@ -306,35 +278,13 @@ const Admin = () => {
                                         style={{ padding: '1rem', borderRadius: '0.5rem', border: '1px solid hsl(var(--border))', background: 'transparent' }}
                                     />
                                 )}
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                    <label style={{ fontSize: '0.85rem', fontWeight: 600, opacity: 0.7 }}>Upload Image/Photo</label>
-                                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                                        <label className="glass-panel" style={{
-                                            flex: 1,
-                                            padding: '1rem',
-                                            borderRadius: '0.5rem',
-                                            border: '1px dashed hsl(var(--border))',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '10px',
-                                            cursor: 'pointer',
-                                            background: selectedFile ? 'hsla(var(--primary), 0.1)' : 'transparent'
-                                        }}>
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                style={{ display: 'none' }}
-                                                onChange={e => setSelectedFile(e.target.files[0])}
-                                            />
-                                            {selectedFile ? (
-                                                <><CheckCircle size={18} color="#00c853" /> {selectedFile.name}</>
-                                            ) : (
-                                                <><Upload size={18} /> Choose Image File</>
-                                            )}
-                                        </label>
-                                    </div>
-                                </div>
+                                <input
+                                    required
+                                    value={formData.image}
+                                    onChange={e => setFormData({ ...formData, image: e.target.value })}
+                                    placeholder="Image URL (Unsplash or direct link)"
+                                    style={{ padding: '1rem', borderRadius: '0.5rem', border: '1px solid hsl(var(--border))', background: 'transparent' }}
+                                />
                                 {activeTab === 'web' && (
                                     <input
                                         value={formData.link}
@@ -351,9 +301,9 @@ const Admin = () => {
                                         style={{ padding: '1rem', borderRadius: '0.5rem', border: '1px solid hsl(var(--border))', background: 'transparent' }}
                                     />
                                 )}
-                                <button type="submit" disabled={dataLoading || uploading} className="btn-primary" style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                                    {(dataLoading || uploading) ? <Loader2 className="animate-spin" size={18} /> : <Plus size={18} />}
-                                    {uploading ? 'Uploading...' : dataLoading ? 'Saving...' : `Publish to ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`}
+                                <button type="submit" disabled={dataLoading} className="btn-primary" style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                                    {dataLoading ? <Loader2 className="animate-spin" size={18} /> : <Plus size={18} />}
+                                    {dataLoading ? 'Saving...' : `Publish to ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`}
                                 </button>
                             </form>
                         </motion.div>
