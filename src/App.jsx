@@ -15,6 +15,8 @@ const Admin = React.lazy(() => import('./pages/Admin'));
 const Blog = React.lazy(() => import('./pages/Blog'));
 const BlogPost = React.lazy(() => import('./pages/BlogPost'));
 const ProductDetail = React.lazy(() => import('./pages/ProductDetail'));
+const Terms = React.lazy(() => import('./pages/Terms'));
+const Privacy = React.lazy(() => import('./pages/Privacy'));
 
 // Fallback component for Suspense
 const LoadingFallback = () => (
@@ -74,6 +76,8 @@ function App() {
                   <Route path="/admin" element={<Admin />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:id" element={<BlogPost />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy" element={<Privacy />} />
                 </Routes>
               </React.Suspense>
             </main>

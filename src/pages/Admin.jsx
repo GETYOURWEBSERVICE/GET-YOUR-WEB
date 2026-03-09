@@ -13,6 +13,7 @@ const Admin = () => {
     const [dataLoading, setDataLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [editingId, setEditingId] = useState(null);
 
     // Data states
     const [projects, setProjects] = useState([]);
@@ -21,6 +22,7 @@ const Admin = () => {
     const [orders, setOrders] = useState([]);
     const [blogs, setBlogs] = useState([]);
     const [citizens, setCitizens] = useState([]);
+    const [meetings, setMeetings] = useState([]);
 
     // Form states
     const [formData, setFormData] = useState({
@@ -52,6 +54,9 @@ const Admin = () => {
 
             const citizenSnap = await getDocs(collection(db, 'citizens'));
             setCitizens(citizenSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+
+            const meetSnap = await getDocs(collection(db, 'meetings'));
+            setMeetings(meetSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds));
         } catch (error) {
             console.error("Fetch failed:", error);
         }
@@ -78,22 +83,47 @@ const Admin = () => {
                     activeTab === 'blogs' ? 'blogs' :
                         activeTab === 'citizens' ? 'citizens' : 'webProducts';
 
-            console.log("📝 Adding document to collection:", collectionName);
-            await addDoc(collection(db, collectionName), {
-                ...formData,
-                createdAt: serverTimestamp()
-            });
+            if (editingId) {
+                console.log("📝 Updating document in collection:", collectionName, "ID:", editingId);
+                await updateDoc(doc(db, collectionName, editingId), {
+                    ...formData,
+                    updatedAt: serverTimestamp()
+                });
+                alert('Updated successfully!');
+            } else {
+                console.log("📝 Adding document to collection:", collectionName);
+                await addDoc(collection(db, collectionName), {
+                    ...formData,
+                    createdAt: serverTimestamp()
+                });
+                alert('Added successfully!');
+            }
 
-            console.log("🎉 Document successfully added!");
+            console.log("🎉 Operation successful!");
             setFormData({ title: '', description: '', image: '', cost: '', link: '', category: '', role: '', name: '' });
+            setEditingId(null);
             fetchData();
-            alert('Added successfully!');
         } catch (error) {
             console.error("❌ Submission Error:", error);
-            alert('Error adding item: ' + error.message);
+            alert('Error saving item: ' + error.message);
         } finally {
             setDataLoading(false);
         }
+    };
+
+    const handleEdit = (item) => {
+        setEditingId(item.id);
+        setFormData({
+            title: item.title || '',
+            description: item.description || '',
+            image: item.image || '',
+            cost: item.cost || '',
+            link: item.link || '',
+            category: item.category || '',
+            role: item.role || '',
+            name: item.name || ''
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleDelete = async (id, collectionName) => {
@@ -138,6 +168,7 @@ const Admin = () => {
                         { id: 'web', label: 'Web Shop', icon: <Globe size={18} /> },
                         { id: 'blogs', label: 'Blogs', icon: <BookOpen size={18} /> },
                         { id: 'citizens', label: 'Citizens', icon: <Package size={18} /> },
+                        { id: 'meetings', label: 'Meetings', icon: <Calendar size={18} /> },
                         { id: 'orders', label: 'Orders', icon: <ShoppingBag size={18} /> }
                     ].map(tab => (
                         <button
@@ -231,6 +262,52 @@ const Admin = () => {
                             )}
                         </div>
                     </motion.div>
+                ) : activeTab === 'meetings' ? (
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                        <h3 style={{ marginBottom: '2rem' }}>Meeting Requests</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                            {meetings.map((meet) => (
+                                <div key={meet.id} className="glass-card" style={{ padding: '2rem' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1.5rem' }} className="mobile-stack">
+                                        <div>
+                                            <h4 style={{ margin: '0 0 5px', fontSize: '1.25rem' }}>{meet.name}</h4>
+                                            <p style={{ margin: 0, fontWeight: 700, color: 'hsl(var(--primary))' }}>{meet.email}</p>
+                                            <p style={{ margin: '4px 0 0', fontSize: '0.85rem', fontWeight: 600, opacity: 0.8 }}>Phone: {meet.phone}</p>
+                                        </div>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <span style={{
+                                                padding: '4px 12px',
+                                                background: 'hsl(var(--accent))',
+                                                borderRadius: '20px',
+                                                fontSize: '0.75rem',
+                                                fontWeight: 800
+                                            }}>
+                                                {meet.status}
+                                            </span>
+                                            <p style={{ margin: '8px 0 0', fontSize: '0.8rem', opacity: 0.5 }}>
+                                                {meet.createdAt?.seconds ? new Date(meet.createdAt.seconds * 1000).toLocaleString() : 'Just now'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div style={{ background: 'white', padding: '1.5rem', borderRadius: 'var(--radius)', border: '1px solid hsl(var(--border))', marginBottom: '1.5rem' }}>
+                                        <p style={{ margin: '0 0 8px', fontWeight: 700, fontSize: '0.85rem' }}>Project Details:</p>
+                                        <p style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.6 }}>{meet.project}</p>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                        <button onClick={() => handleDelete(meet.id, 'meetings')} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#ff4444', fontWeight: 600, fontSize: '0.85rem' }}>
+                                            <Trash2 size={16} /> Delete Request
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                            {meetings.length === 0 && (
+                                <div className="glass-panel" style={{ padding: '4rem', textAlign: 'center', opacity: 0.5 }}>
+                                    <Calendar size={48} style={{ marginBottom: '1rem' }} />
+                                    <p>No meeting requests yet.</p>
+                                </div>
+                            )}
+                        </div>
+                    </motion.div>
                 ) : (
                     <div className="grid-cols-2" style={{ alignItems: 'start' }}>
                         {/* Form Section */}
@@ -242,7 +319,7 @@ const Admin = () => {
                             style={{ padding: '3rem' }}
                         >
                             <h3 style={{ marginBottom: '2rem' }}>
-                                {activeTab === 'blogs' ? 'Write New Post' : `Add New ${activeTab === 'projects' ? 'Project' : 'Product'}`}
+                                {editingId ? `Edit ${activeTab === 'blogs' ? 'Post' : activeTab === 'projects' ? 'Project' : 'Product'}` : (activeTab === 'blogs' ? 'Write New Post' : `Add New ${activeTab === 'projects' ? 'Project' : 'Product'}`)}
                             </h3>
                             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                                 <input
@@ -301,10 +378,25 @@ const Admin = () => {
                                         style={{ padding: '1rem', borderRadius: '0.5rem', border: '1px solid hsl(var(--border))', background: 'transparent' }}
                                     />
                                 )}
-                                <button type="submit" disabled={dataLoading} className="btn-primary" style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                                    {dataLoading ? <Loader2 className="animate-spin" size={18} /> : <Plus size={18} />}
-                                    {dataLoading ? 'Saving...' : `Publish to ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`}
-                                </button>
+                                <div style={{ display: 'flex', gap: '1rem' }}>
+                                    <button type="submit" disabled={dataLoading} className="btn-primary" style={{ flex: 1, marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                                        {dataLoading ? <Loader2 className="animate-spin" size={18} /> : (editingId ? <CheckCircle size={18} /> : <Plus size={18} />)}
+                                        {dataLoading ? 'Saving...' : (editingId ? 'Update Item' : `Publish to ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`)}
+                                    </button>
+                                    {editingId && (
+                                        <button
+                                            type="button"
+                                            className="glass-panel"
+                                            onClick={() => {
+                                                setEditingId(null);
+                                                setFormData({ title: '', description: '', image: '', cost: '', link: '', category: '', role: '', name: '' });
+                                            }}
+                                            style={{ marginTop: '1rem', padding: '0 1.5rem', fontWeight: 700 }}
+                                        >
+                                            Cancel
+                                        </button>
+                                    )}
+                                </div>
                             </form>
                         </motion.div>
 
@@ -320,12 +412,20 @@ const Admin = () => {
                                             {activeTab === 'projects' ? item.category : activeTab === 'citizens' ? item.role : activeTab === 'blogs' ? new Date(item.createdAt?.seconds * 1000).toLocaleDateString() : `₹${item.cost || item.price}`}
                                         </p>
                                     </div>
-                                    <button
-                                        onClick={() => handleDelete(item.id, activeTab === 'projects' ? 'projects' : activeTab === 'apps' ? 'appProducts' : activeTab === 'blogs' ? 'blogs' : activeTab === 'citizens' ? 'citizens' : 'webProducts')}
-                                        style={{ color: '#ff4444', padding: '8px' }}
-                                    >
-                                        <Trash2 size={18} />
-                                    </button>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <button
+                                            onClick={() => handleEdit(item)}
+                                            style={{ color: 'hsl(var(--primary))', padding: '8px' }}
+                                        >
+                                            <Upload size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(item.id, activeTab === 'projects' ? 'projects' : activeTab === 'apps' ? 'appProducts' : activeTab === 'blogs' ? 'blogs' : activeTab === 'citizens' ? 'citizens' : 'webProducts')}
+                                            style={{ color: '#ff4444', padding: '8px' }}
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
                             {(activeTab === 'projects' ? projects : activeTab === 'apps' ? appProducts : activeTab === 'blogs' ? blogs : activeTab === 'citizens' ? citizens : webProducts).length === 0 && (

@@ -53,9 +53,9 @@ const Footer = () => {
                         <div>
                             <h4 style={{ color: 'hsl(var(--primary))', marginBottom: '1.5rem', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.1em' }}>Legal</h4>
                             <ul style={{ listStyle: 'none', fontSize: '1rem' }}>
-                                <li style={{ marginBottom: '1rem' }}><a href="#" style={{ color: 'hsla(0,0%,100%,0.8)' }}>Privacy Policy</a></li>
-                                <li style={{ marginBottom: '1rem' }}><a href="#" style={{ color: 'hsla(0,0%,100%,0.8)' }}>Terms of Service</a></li>
-                                <li style={{ marginBottom: '1rem' }}><a href="#" style={{ color: 'hsla(0,0%,100%,0.8)' }}>Refund Policy</a></li>
+                                <li style={{ marginBottom: '1rem' }}><a href="/privacy" style={{ color: 'hsla(0,0%,100%,0.8)' }}>Privacy Policy</a></li>
+                                <li style={{ marginBottom: '1rem' }}><a href="/terms" style={{ color: 'hsla(0,0%,100%,0.8)' }}>Terms of Service</a></li>
+                                <li style={{ marginBottom: '1rem' }}><a href="/terms#refund-policy" style={{ color: 'hsla(0,0%,100%,0.8)' }}>Refund Policy</a></li>
                             </ul>
                         </div>
                     </div>
