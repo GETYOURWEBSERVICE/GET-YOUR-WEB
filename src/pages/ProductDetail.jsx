@@ -88,6 +88,7 @@ const ProductDetail = () => {
                         <img
                             src={product.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"}
                             alt={title}
+                            onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" }}
                             style={{ width: '100%', borderRadius: '1.5rem', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
                         />
                     </m.div>
@@ -177,7 +178,19 @@ const ProductDetail = () => {
                                         border: '1px solid hsl(var(--border))'
                                     }}
                                 >
-                                    <ExternalLink size={20} /> Visit Live Website
+                                    <img
+                                        src={product.image || "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&q=80&w=800"}
+                                        alt={product.title}
+                                        onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&q=80&w=800" }}
+                                        style={{
+                                            width: '20px', // Adjust size as needed
+                                            height: '20px', // Adjust size as needed
+                                            objectFit: 'cover',
+                                            marginRight: '10px'
+                                        }}
+                                        className="card-image"
+                                    />
+                                    Visit Live Website
                                 </a>
                             )}
                         </div>
