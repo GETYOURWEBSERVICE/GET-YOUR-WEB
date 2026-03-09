@@ -1,16 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { m } from 'framer-motion';
+import { db } from '../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 const Marquee = () => {
-    const images = [
+    const [images, setImages] = useState([
         "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
         "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800",
         "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&q=80&w=800",
-        "https://images.unsplash.com/photo-1531403001884-24adad9227ca?auto=format&fit=crop&q=80&w=800",
-        "https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&q=80&w=800",
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800", // duplicated for seamless loop
-        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800",
-    ];
+        "https://images.unsplash.com/photo-1531403001884-24adad9227ca?auto=format&fit=crop&q=80&w=800"
+    ]);
+
+    useEffect(() => {
+        const fetchImages = async () => {
+            try {
+                // Fetch from both collections to get all work
+                const webSnap = await getDocs(collection(db, 'webProducts'));
+                const projectSnap = await getDocs(collection(db, 'projects'));
+
+                const webImages = webSnap.docs.map(doc => doc.data().image).filter(Boolean);
+                const projectImages = projectSnap.docs.map(doc => doc.data().image).filter(Boolean);
+
+                const allImages = [...webImages, ...projectImages];
+
+                if (allImages.length > 0) {
+                    // If we have very few images, double them to make the loop look better
+                    const fullList = allImages.length < 5 ? [...allImages, ...allImages] : allImages;
+                    setImages(fullList);
+                }
+            } catch (error) {
+                console.error("Error fetching marquee images:", error);
+            }
+        };
+
+        fetchImages();
+    }, []);
 
     return (
         <div style={{
@@ -25,7 +49,7 @@ const Marquee = () => {
                     x: [0, '-50%']
                 }}
                 transition={{
-                    duration: 20,
+                    duration: images.length * 4, // Dynamic duration based on image count
                     repeat: Infinity,
                     ease: "linear"
                 }}
@@ -35,23 +59,25 @@ const Marquee = () => {
                     width: 'max-content'
                 }}
             >
-                {images.concat(images).map((img, i) => (
+                {/* Duplicate the array for seamless infinite sliding */}
+                {[...images, ...images].map((img, i) => (
                     <div
                         key={i}
                         style={{
-                            width: '350px',
-                            height: '220px',
-                            borderRadius: '16px',
+                            width: 'clamp(280px, 40vw, 450px)',
+                            height: 'clamp(180px, 25vw, 280px)',
+                            borderRadius: '24px',
                             overflow: 'hidden',
-                            boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                            boxShadow: '0 20px 40px rgba(0,0,0,0.08)',
                             flexShrink: 0,
-                            border: '1px solid hsla(var(--border), 0.3)'
+                            border: '1px solid hsla(var(--border), 0.5)',
+                            background: '#fff'
                         }}
                     >
                         <img
                             src={img}
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            alt={`Slide ${i}`}
+                            alt={`Work ${i}`}
                         />
                     </div>
                 ))}
