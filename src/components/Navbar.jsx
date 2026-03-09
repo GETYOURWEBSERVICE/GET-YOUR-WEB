@@ -235,7 +235,7 @@ const Navbar = () => {
             {isOpen ? <X /> : <Menu />}
           </button>
         </div>
-      </div>
+      </nav>
 
       <style>{`
         @media (min-width: 1025px) {
@@ -356,9 +356,8 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
-  </header >
-);
+    </header>
+  );
 };
 
 export default Navbar;
