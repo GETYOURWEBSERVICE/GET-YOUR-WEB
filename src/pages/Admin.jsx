@@ -69,6 +69,7 @@ const Admin = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("📦 Form submission started...");
         setDataLoading(true);
 
         try {
@@ -76,11 +77,25 @@ const Admin = () => {
 
             // Handle file upload if a file is selected
             if (selectedFile) {
+                console.log("📤 Starting file upload:", selectedFile.name);
                 setUploading(true);
-                const storageRef = ref(storage, `${activeTab}/${Date.now()}_${selectedFile.name}`);
-                const uploadSnap = await uploadBytes(storageRef, selectedFile);
-                imageUrl = await getDownloadURL(uploadSnap.ref);
+                try {
+                    const storageRef = ref(storage, `${activeTab}/${Date.now()}_${selectedFile.name}`);
+                    const uploadSnap = await uploadBytes(storageRef, selectedFile);
+                    console.log("✅ Upload successful, snapshot:", uploadSnap);
+
+                    imageUrl = await getDownloadURL(uploadSnap.ref);
+                    console.log("🔗 Obtained download URL:", imageUrl);
+                } catch (uploadError) {
+                    console.error("❌ Storage Upload Error:", uploadError);
+                    alert("Upload Failed! Please check your Firebase Storage Rules. Details: " + uploadError.message);
+                    setUploading(false);
+                    setDataLoading(false);
+                    return; // Stop the rest of the submission
+                }
                 setUploading(false);
+            } else {
+                console.log("ℹ️ No file selected, using either URL or placeholder.");
             }
 
             const collectionName = activeTab === 'projects' ? 'projects' :
@@ -88,22 +103,25 @@ const Admin = () => {
                     activeTab === 'blogs' ? 'blogs' :
                         activeTab === 'citizens' ? 'citizens' : 'webProducts';
 
+            console.log("📝 Adding document to collection:", collectionName);
             await addDoc(collection(db, collectionName), {
                 ...formData,
                 image: imageUrl,
                 createdAt: serverTimestamp()
             });
 
+            console.log("🎉 Document successfully added!");
             setFormData({ title: '', description: '', image: '', cost: '', link: '', category: '', role: '', name: '' });
             setSelectedFile(null);
             fetchData();
             alert('Added successfully!');
         } catch (error) {
-            console.error(error);
+            console.error("❌ Submission Error:", error);
             alert('Error adding item: ' + error.message);
+        } finally {
+            setDataLoading(false);
+            setUploading(false);
         }
-        setDataLoading(false);
-        setUploading(false);
     };
 
     const handleDelete = async (id, collectionName) => {
