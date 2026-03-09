@@ -46,42 +46,7 @@ const WebShop = () => {
         fetchWebProducts();
     }, []);
 
-    // Fallback data if none exists in Firestore yet
-    const fallbackSolutions = [
-        {
-            title: "Performance Landing Page",
-            price: "80,000",
-            icon: <Zap size={28} />,
-            image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&q=80&w=800",
-            description: "High-conversion designs tailored for marketing campaigns and single products.",
-            features: [
-                "Lightning Fast Load Speed",
-                "Mobile-First Architecture",
-                "Built-in Analytics Ready",
-                "SEO Optimized Structure",
-                "Lead Capture Systems"
-            ],
-            color: "hsl(var(--primary))"
-        },
-        {
-            title: "Premium Business Hub",
-            price: "1,80,000",
-            icon: <Globe size={28} />,
-            image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&q=80&w=800",
-            description: "A comprehensive digital home for established brands and corporate identity.",
-            features: [
-                "Up to 10 Custom Pages",
-                "CMS (Content Management)",
-                "Blog & Media Resources",
-                "Interactive Components",
-                "Advanced SEO Strategy"
-            ],
-            color: "hsl(var(--foreground))",
-            highlight: true
-        }
-    ];
-
-    const displayProducts = solutions.length > 0 ? solutions : loading ? [] : fallbackSolutions;
+    const displayProducts = solutions;
 
     return (
         <div className="page-container" style={{ paddingTop: 'clamp(6rem, 12vh, 8rem)', paddingBottom: '5rem' }}>
@@ -147,101 +112,108 @@ const WebShop = () => {
                         <div style={{ gridColumn: '1/-1', display: 'flex', justifyContent: 'center', padding: '5rem' }}>
                             <Loader2 size={40} className="animate-spin" color="hsl(var(--primary))" />
                         </div>
-                    ) : displayProducts.map((sol, i) => (
-                        <m.div
-                            key={sol.id || i}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.05 }}
-                            whileHover={{ y: -5 }}
-                            style={{ position: 'relative' }}
-                        >
-                            <div className="glass-card" style={{
-                                padding: 0,
-                                height: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                overflow: 'hidden',
-                                border: sol.highlight ? '1px solid hsl(var(--primary))' : '1px solid hsla(var(--border), 0.5)',
-                                background: 'white',
-                                borderRadius: '12px'
-                            }}>
-                                {/* Product Image Area */}
-                                <div style={{ aspectRatio: '1/1', overflow: 'hidden', position: 'relative', background: '#f8f8f8' }}>
-                                    <m.img
-                                        src={sol.image}
-                                        alt={sol.title || sol.name}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    />
-                                    {sol.highlight && (
-                                        <div style={{
-                                            position: 'absolute',
-                                            top: '8px',
-                                            left: '8px',
-                                            background: 'hsl(var(--primary))',
-                                            color: 'black',
-                                            padding: '2px 8px',
-                                            borderRadius: '4px',
-                                            fontSize: '0.65rem',
-                                            fontWeight: 800
+                    ) : displayProducts.length > 0 ? (
+                        displayProducts.map((sol, i) => (
+                            <m.div
+                                key={sol.id || i}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.05 }}
+                                whileHover={{ y: -5 }}
+                                style={{ position: 'relative' }}
+                            >
+                                <div className="glass-card" style={{
+                                    padding: 0,
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    overflow: 'hidden',
+                                    border: sol.highlight ? '1px solid hsl(var(--primary))' : '1px solid hsla(var(--border), 0.5)',
+                                    background: 'white',
+                                    borderRadius: '12px'
+                                }}>
+                                    {/* Product Image Area */}
+                                    <div style={{ aspectRatio: '1/1', overflow: 'hidden', position: 'relative', background: '#f8f8f8' }}>
+                                        <m.img
+                                            src={sol.image}
+                                            alt={sol.title || sol.name}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                        {sol.highlight && (
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '8px',
+                                                left: '8px',
+                                                background: 'hsl(var(--primary))',
+                                                color: 'black',
+                                                padding: '2px 8px',
+                                                borderRadius: '4px',
+                                                fontSize: '0.65rem',
+                                                fontWeight: 800
+                                            }}>
+                                                BESTSELLER
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Content Area */}
+                                    <div style={{ padding: '12px', flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                        <h4 style={{
+                                            fontSize: '0.9rem',
+                                            fontWeight: 600,
+                                            color: '#333',
+                                            margin: 0,
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: 2,
+                                            WebkitBoxOrient: 'vertical',
+                                            overflow: 'hidden',
+                                            lineHeight: 1.3
                                         }}>
-                                            BESTSELLER
+                                            {sol.title || sol.name}
+                                        </h4>
+
+                                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                                            <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#000' }}>₹{sol.price}</span>
+                                            <span style={{ fontSize: '0.7rem', color: '#666', fontWeight: 500 }}>onwards</span>
                                         </div>
-                                    )}
-                                </div>
 
-                                {/* Content Area */}
-                                <div style={{ padding: '12px', flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                    <h4 style={{
-                                        fontSize: '0.9rem',
-                                        fontWeight: 600,
-                                        color: '#333',
-                                        margin: 0,
-                                        display: '-webkit-box',
-                                        WebkitLineClamp: 2,
-                                        WebkitBoxOrient: 'vertical',
-                                        overflow: 'hidden',
-                                        lineHeight: 1.3
-                                    }}>
-                                        {sol.title || sol.name}
-                                    </h4>
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            backgroundColor: '#f0f0f0',
+                                            width: 'fit-content',
+                                            padding: '2px 6px',
+                                            borderRadius: '100px',
+                                            marginTop: '4px'
+                                        }}>
+                                            <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#333' }}>Free Delivery</span>
+                                        </div>
 
-                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                                        <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#000' }}>₹{sol.price}</span>
-                                        <span style={{ fontSize: '0.7rem', color: '#666', fontWeight: 500 }}>onwards</span>
+                                        <button
+                                            onClick={() => navigate(`/product/web/${sol.id}`)}
+                                            className="btn-primary"
+                                            style={{
+                                                width: '100%',
+                                                padding: '8px',
+                                                borderRadius: '8px',
+                                                marginTop: '12px',
+                                                fontSize: '0.8rem',
+                                                fontWeight: 700
+                                            }}
+                                        >
+                                            View Details
+                                        </button>
                                     </div>
-
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        backgroundColor: '#f0f0f0',
-                                        width: 'fit-content',
-                                        padding: '2px 6px',
-                                        borderRadius: '100px',
-                                        marginTop: '4px'
-                                    }}>
-                                        <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#333' }}>Free Delivery</span>
-                                    </div>
-
-                                    <button
-                                        onClick={() => navigate('/book-meet')}
-                                        className="btn-primary"
-                                        style={{
-                                            width: '100%',
-                                            padding: '8px',
-                                            borderRadius: '8px',
-                                            marginTop: '12px',
-                                            fontSize: '0.8rem',
-                                            fontWeight: 700
-                                        }}
-                                    >
-                                        View Details
-                                    </button>
                                 </div>
-                            </div>
-                        </m.div>
-                    ))}
+                            </m.div>
+                        ))
+                    ) : (
+                        <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '5rem', opacity: 0.5 }}>
+                            <ShoppingBag size={48} style={{ marginBottom: '1rem', margin: '0 auto' }} />
+                            <p>No products found in the Web Shop yet.</p>
+                        </div>
+                    )}
                 </div>
 
                 <div style={{ marginTop: '8rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }} className="mobile-stack">

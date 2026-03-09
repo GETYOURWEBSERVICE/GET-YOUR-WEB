@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 import { db } from '../firebase';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { Briefcase, Loader2 } from 'lucide-react';
 
 const Work = () => {
     const [projects, setProjects] = useState([]);
@@ -26,23 +26,7 @@ const Work = () => {
         fetchProjects();
     }, []);
 
-    // Fallback data if none exists in Firestore yet
-    const fallbackProjects = [
-        {
-            title: "Luminal SaaS Platform",
-            category: "UI/UX Design • Fullstack",
-            image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800&ls=75",
-            description: "A high-performance analytics dashboard for industrial operations."
-        },
-        {
-            title: "NexGen E-Commerce",
-            category: "Mobile Design • React Native",
-            image: "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&q=80&w=800&ls=75",
-            description: "A seamless shopping experience built for modern consumers."
-        }
-    ];
-
-    const displayProjects = projects.length > 0 ? projects : fallbackProjects;
+    const displayProjects = projects;
 
     return (
         <section className="section" id="work">
@@ -67,36 +51,47 @@ const Work = () => {
                     </h2>
                 </div>
 
-                <div className="grid-cols-2" style={{ gap: '3.5rem' }}>
-                    {displayProjects.map((project, index) => (
-                        <m.div
-                            key={project.id || index}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                            viewport={{ once: true }}
-                            className="glass-card"
-                            style={{ padding: '0', overflow: 'hidden', cursor: 'pointer' }}
-                        >
-                            <div style={{ overflow: 'hidden', aspectRatio: '16/10' }}>
-                                <m.img
-                                    whileHover={{ scale: 1.05 }}
-                                    transition={{ duration: 0.6 }}
-                                    src={project.image}
-                                    alt={project.title}
-                                    loading="lazy"
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                />
-                            </div>
-                            <div style={{ padding: 'clamp(1.5rem, 5vw, 2.5rem)' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'hsl(var(--primary))' }}>{project.category}</span>
+                <div className={displayProjects.length > 0 ? "grid-cols-2" : ""} style={{ gap: '3.5rem' }}>
+                    {loading ? (
+                        <div style={{ display: 'flex', justifyContent: 'center', padding: '5rem' }}>
+                            <Loader2 size={40} className="animate-spin" color="hsl(var(--primary))" />
+                        </div>
+                    ) : displayProjects.length > 0 ? (
+                        displayProjects.map((project, index) => (
+                            <m.div
+                                key={project.id || index}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                                className="glass-card"
+                                style={{ padding: '0', overflow: 'hidden', cursor: 'pointer' }}
+                            >
+                                <div style={{ overflow: 'hidden', aspectRatio: '16/10' }}>
+                                    <m.img
+                                        whileHover={{ scale: 1.05 }}
+                                        transition={{ duration: 0.6 }}
+                                        src={project.image}
+                                        alt={project.title}
+                                        loading="lazy"
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
                                 </div>
-                                <h3 style={{ fontSize: 'clamp(1.25rem, 5vw, 1.75rem)', marginBottom: '1rem', color: 'hsl(var(--foreground))' }}>{project.title}</h3>
-                                <p style={{ color: 'hsl(var(--muted-foreground))', lineHeight: 1.6, fontSize: '0.95rem' }}>{project.description}</p>
-                            </div>
-                        </m.div>
-                    ))}
+                                <div style={{ padding: 'clamp(1.5rem, 5vw, 2.5rem)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'hsl(var(--primary))' }}>{project.category}</span>
+                                    </div>
+                                    <h3 style={{ fontSize: 'clamp(1.25rem, 5vw, 1.75rem)', marginBottom: '1rem', color: 'hsl(var(--foreground))' }}>{project.title}</h3>
+                                    <p style={{ color: 'hsl(var(--muted-foreground))', lineHeight: 1.6, fontSize: '0.95rem' }}>{project.description}</p>
+                                </div>
+                            </m.div>
+                        ))
+                    ) : (
+                        <div style={{ textAlign: 'center', padding: '5rem', opacity: 0.5, width: '100%' }}>
+                            <Briefcase size={48} style={{ marginBottom: '1rem', margin: '0 auto' }} />
+                            <p>No projects showcased yet.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </section>

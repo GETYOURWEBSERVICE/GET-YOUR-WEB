@@ -46,42 +46,7 @@ const AppShop = () => {
         fetchAppProducts();
     }, []);
 
-    // Fallback data if none exists in Firestore yet
-    const fallbackApps = [
-        {
-            title: "Mobile MVP",
-            price: "1,50,000",
-            icon: <Zap size={28} />,
-            image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=800",
-            description: "Go from idea to App Store in record time. Perfect for startups.",
-            features: [
-                "Single Platform (iOS or Android)",
-                "Firebase Backend Integration",
-                "UI/UX Design Included",
-                "Up to 5 Core Screens",
-                "Push Notifications"
-            ],
-            gradient: "linear-gradient(135deg, #FF9966 0%, #FF5E62 100%)"
-        },
-        {
-            title: "Advanced E-Com",
-            price: "3,50,000",
-            icon: <Smartphone size={28} />,
-            image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
-            description: "A full-scale mobile shopping experience for your growing brand.",
-            features: [
-                "Cross-Platform (iOS & Android)",
-                "Full Catalog Management",
-                "Secure Payment Gateway",
-                "User Accounts & Profiles",
-                "Admin Dashboard Access"
-            ],
-            gradient: "linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%)",
-            highlight: true
-        }
-    ];
-
-    const displayApps = apps.length > 0 ? apps : loading ? [] : fallbackApps;
+    const displayApps = apps;
 
     return (
         <div className="page-container" style={{ paddingTop: 'clamp(6rem, 12vh, 8rem)', paddingBottom: '5rem' }}>
@@ -158,101 +123,108 @@ const AppShop = () => {
                         <div style={{ gridColumn: '1/-1', display: 'flex', justifyContent: 'center', padding: '5rem' }}>
                             <Loader2 size={40} className="animate-spin" color="hsl(var(--primary))" />
                         </div>
-                    ) : displayApps.map((pkg, idx) => (
-                        <m.div
-                            key={pkg.id || idx}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: idx * 0.05 }}
-                            whileHover={{ y: -5 }}
-                            style={{ position: 'relative' }}
-                        >
-                            <div className="glass-card" style={{
-                                padding: 0,
-                                height: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                overflow: 'hidden',
-                                border: pkg.highlight ? '1px solid hsl(var(--primary))' : '1px solid hsla(var(--border), 0.5)',
-                                background: 'white',
-                                borderRadius: '12px'
-                            }}>
-                                {/* Product Image Area */}
-                                <div style={{ aspectRatio: '1/1', overflow: 'hidden', position: 'relative', background: '#f8f8f8' }}>
-                                    <m.img
-                                        src={pkg.image}
-                                        alt={pkg.title || pkg.name}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    />
-                                    {pkg.highlight && (
-                                        <div style={{
-                                            position: 'absolute',
-                                            top: '8px',
-                                            left: '8px',
-                                            background: '#ff4d4d',
-                                            color: 'white',
-                                            padding: '2px 8px',
-                                            borderRadius: '4px',
-                                            fontSize: '0.65rem',
-                                            fontWeight: 800
+                    ) : displayApps.length > 0 ? (
+                        displayApps.map((pkg, idx) => (
+                            <m.div
+                                key={pkg.id || idx}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: idx * 0.05 }}
+                                whileHover={{ y: -5 }}
+                                style={{ position: 'relative' }}
+                            >
+                                <div className="glass-card" style={{
+                                    padding: 0,
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    overflow: 'hidden',
+                                    border: pkg.highlight ? '1px solid hsl(var(--primary))' : '1px solid hsla(var(--border), 0.5)',
+                                    background: 'white',
+                                    borderRadius: '12px'
+                                }}>
+                                    {/* Product Image Area */}
+                                    <div style={{ aspectRatio: '1/1', overflow: 'hidden', position: 'relative', background: '#f8f8f8' }}>
+                                        <m.img
+                                            src={pkg.image}
+                                            alt={pkg.title || pkg.name}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                        {pkg.highlight && (
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '8px',
+                                                left: '8px',
+                                                background: '#ff4d4d',
+                                                color: 'white',
+                                                padding: '2px 8px',
+                                                borderRadius: '4px',
+                                                fontSize: '0.65rem',
+                                                fontWeight: 800
+                                            }}>
+                                                TOP SELLER
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Content Area */}
+                                    <div style={{ padding: '12px', flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                        <h4 style={{
+                                            fontSize: '0.9rem',
+                                            fontWeight: 600,
+                                            color: '#333',
+                                            margin: 0,
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: 2,
+                                            WebkitBoxOrient: 'vertical',
+                                            overflow: 'hidden',
+                                            lineHeight: 1.3
                                         }}>
-                                            TOP SELLER
+                                            {pkg.title || pkg.name}
+                                        </h4>
+
+                                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                                            <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#000' }}>₹{pkg.price}</span>
+                                            <span style={{ fontSize: '0.7rem', color: '#666', fontWeight: 500 }}>onwards</span>
                                         </div>
-                                    )}
-                                </div>
 
-                                {/* Content Area */}
-                                <div style={{ padding: '12px', flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                    <h4 style={{
-                                        fontSize: '0.9rem',
-                                        fontWeight: 600,
-                                        color: '#333',
-                                        margin: 0,
-                                        display: '-webkit-box',
-                                        WebkitLineClamp: 2,
-                                        WebkitBoxOrient: 'vertical',
-                                        overflow: 'hidden',
-                                        lineHeight: 1.3
-                                    }}>
-                                        {pkg.title || pkg.name}
-                                    </h4>
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            backgroundColor: '#e8f5e9',
+                                            width: 'fit-content',
+                                            padding: '2px 6px',
+                                            borderRadius: '100px',
+                                            marginTop: '4px'
+                                        }}>
+                                            <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#2e7d32' }}>Secure Setup</span>
+                                        </div>
 
-                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                                        <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#000' }}>₹{pkg.price}</span>
-                                        <span style={{ fontSize: '0.7rem', color: '#666', fontWeight: 500 }}>onwards</span>
+                                        <button
+                                            onClick={() => navigate(`/product/app/${pkg.id}`)}
+                                            className="btn-primary"
+                                            style={{
+                                                width: '100%',
+                                                padding: '8px',
+                                                borderRadius: '8px',
+                                                marginTop: '12px',
+                                                fontSize: '0.8rem',
+                                                fontWeight: 700
+                                            }}
+                                        >
+                                            Order Now
+                                        </button>
                                     </div>
-
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        backgroundColor: '#e8f5e9',
-                                        width: 'fit-content',
-                                        padding: '2px 6px',
-                                        borderRadius: '100px',
-                                        marginTop: '4px'
-                                    }}>
-                                        <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#2e7d32' }}>Secure Setup</span>
-                                    </div>
-
-                                    <button
-                                        onClick={() => navigate('/book-meet')}
-                                        className="btn-primary"
-                                        style={{
-                                            width: '100%',
-                                            padding: '8px',
-                                            borderRadius: '8px',
-                                            marginTop: '12px',
-                                            fontSize: '0.8rem',
-                                            fontWeight: 700
-                                        }}
-                                    >
-                                        Order Now
-                                    </button>
                                 </div>
-                            </div>
-                        </m.div>
-                    ))}
+                            </m.div>
+                        ))
+                    ) : (
+                        <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '5rem', opacity: 0.5 }}>
+                            <Smartphone size={48} style={{ marginBottom: '1rem', margin: '0 auto' }} />
+                            <p>No applications found in the App Shop yet.</p>
+                        </div>
+                    )}
                 </div>
 
                 <m.div

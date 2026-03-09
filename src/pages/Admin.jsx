@@ -67,7 +67,19 @@ const Admin = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setDataLoading(true);
+
         try {
+            let imageUrl = formData.image;
+
+            // Handle file upload if a file is selected
+            if (selectedFile) {
+                setUploading(true);
+                const storageRef = ref(storage, `${activeTab}/${Date.now()}_${selectedFile.name}`);
+                const uploadSnap = await uploadBytes(storageRef, selectedFile);
+                imageUrl = await getDownloadURL(uploadSnap.ref);
+                setUploading(false);
+            }
+
             const collectionName = activeTab === 'projects' ? 'projects' :
                 activeTab === 'apps' ? 'appProducts' :
                     activeTab === 'blogs' ? 'blogs' :
@@ -75,17 +87,20 @@ const Admin = () => {
 
             await addDoc(collection(db, collectionName), {
                 ...formData,
+                image: imageUrl,
                 createdAt: serverTimestamp()
             });
 
             setFormData({ title: '', description: '', image: '', cost: '', link: '', category: '', role: '', name: '' });
+            setSelectedFile(null);
             fetchData();
             alert('Added successfully!');
         } catch (error) {
             console.error(error);
-            alert('Error adding item');
+            alert('Error adding item: ' + error.message);
         }
         setDataLoading(false);
+        setUploading(false);
     };
 
     const handleDelete = async (id, collectionName) => {
@@ -270,13 +285,35 @@ const Admin = () => {
                                         style={{ padding: '1rem', borderRadius: '0.5rem', border: '1px solid hsl(var(--border))', background: 'transparent' }}
                                     />
                                 )}
-                                <input
-                                    required
-                                    value={formData.image}
-                                    onChange={e => setFormData({ ...formData, image: e.target.value })}
-                                    placeholder="Image URL (Unsplash or direct link)"
-                                    style={{ padding: '1rem', borderRadius: '0.5rem', border: '1px solid hsl(var(--border))', background: 'transparent' }}
-                                />
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    <label style={{ fontSize: '0.85rem', fontWeight: 600, opacity: 0.7 }}>Upload Image/Photo</label>
+                                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                        <label className="glass-panel" style={{
+                                            flex: 1,
+                                            padding: '1rem',
+                                            borderRadius: '0.5rem',
+                                            border: '1px dashed hsl(var(--border))',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '10px',
+                                            cursor: 'pointer',
+                                            background: selectedFile ? 'hsla(var(--primary), 0.1)' : 'transparent'
+                                        }}>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                style={{ display: 'none' }}
+                                                onChange={e => setSelectedFile(e.target.files[0])}
+                                            />
+                                            {selectedFile ? (
+                                                <><CheckCircle size={18} color="#00c853" /> {selectedFile.name}</>
+                                            ) : (
+                                                <><Upload size={18} /> Choose Image File</>
+                                            )}
+                                        </label>
+                                    </div>
+                                </div>
                                 {activeTab === 'web' && (
                                     <input
                                         value={formData.link}
@@ -293,8 +330,9 @@ const Admin = () => {
                                         style={{ padding: '1rem', borderRadius: '0.5rem', border: '1px solid hsl(var(--border))', background: 'transparent' }}
                                     />
                                 )}
-                                <button type="submit" disabled={dataLoading} className="btn-primary" style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                                    <Plus size={18} /> {dataLoading ? 'Saving...' : `Publish to ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`}
+                                <button type="submit" disabled={dataLoading || uploading} className="btn-primary" style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                                    {(dataLoading || uploading) ? <Loader2 className="animate-spin" size={18} /> : <Plus size={18} />}
+                                    {uploading ? 'Uploading...' : dataLoading ? 'Saving...' : `Publish to ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`}
                                 </button>
                             </form>
                         </motion.div>
