@@ -14,6 +14,7 @@ const BookMeet = React.lazy(() => import('./pages/BookMeet'));
 const Admin = React.lazy(() => import('./pages/Admin'));
 const Blog = React.lazy(() => import('./pages/Blog'));
 const BlogPost = React.lazy(() => import('./pages/BlogPost'));
+const ProductDetail = React.lazy(() => import('./pages/ProductDetail'));
 
 // Fallback component for Suspense
 const LoadingFallback = () => (
