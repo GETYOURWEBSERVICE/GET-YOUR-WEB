@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
-import { db } from '../firebase';
+import { db, storage } from '../firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { Plus, Trash2, Globe, Smartphone, Briefcase, ExternalLink, Package, ShoppingBag, BookOpen, CheckCircle, Clock } from 'lucide-react';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { Plus, Trash2, Globe, Smartphone, Briefcase, ExternalLink, Package, ShoppingBag, BookOpen, CheckCircle, Clock, Upload, Loader2 } from 'lucide-react';
 import { Navigate } from 'react-router-dom';
 
 const Admin = () => {
     const { currentUser, isAdmin, loading } = useAuth();
     const [activeTab, setActiveTab] = useState('projects');
     const [dataLoading, setDataLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     // Data states
     const [projects, setProjects] = useState([]);

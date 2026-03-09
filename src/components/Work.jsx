@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
-import { db } from '../firebase';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { Briefcase, Loader2 } from 'lucide-react';
 
 const Work = () => {
