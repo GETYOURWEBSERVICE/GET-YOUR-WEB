@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, Video, Send, Loader2, CheckCircle } from 'lucide-react';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import SEO from '../components/SEO';
 
 const BookMeet = () => {
     const [formData, setFormData] = useState({ name: '', email: '', phone: '', project: '' });
@@ -30,6 +31,12 @@ const BookMeet = () => {
 
     return (
         <div className="section" style={{ minHeight: '80vh', paddingTop: '10rem' }}>
+            <SEO
+                title="Book a Discovery Meet"
+                description="Schedule a 30-minute strategic consultation with Get Your Web. Discuss your web project, app development, or digital strategy."
+                keywords="book meeting, web design consultation, web development strategy, schedule call, Get Your Web"
+                url="https://getyourweb.qzz.io/book-meet"
+            />
             <div className="container">
                 <div className="grid-cols-2" style={{ alignItems: 'start' }}>
                     <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}>

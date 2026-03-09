@@ -40,7 +40,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav
+    <header
       className={scrolled ? "glass-panel" : ""}
       style={{
         position: 'fixed',
@@ -54,7 +54,7 @@ const Navbar = () => {
         boxShadow: scrolled ? '0 10px 30px -10px rgba(25, 30, 15, 0.1)' : 'none'
       }}
     >
-      <div className="container" style={{
+      <nav className="container" style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center'
@@ -357,7 +357,8 @@ const Navbar = () => {
         )}
       </AnimatePresence>
     </nav>
-  );
+  </header >
+);
 };
 
 export default Navbar;

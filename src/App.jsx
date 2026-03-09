@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { LazyMotion, domAnimation } from 'framer-motion';
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -57,35 +58,37 @@ const ScrollToTop = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <LazyMotion features={domAnimation}>
-        <BrowserRouter>
-          <div className="app-container">
-            <SecurityGuard />
-            <ScrollToTop />
+    <HelmetProvider>
+      <AuthProvider>
+        <LazyMotion features={domAnimation}>
+          <BrowserRouter>
+            <div className="app-container">
+              <SecurityGuard />
+              <ScrollToTop />
 
-            <Navbar />
-            <main>
-              <React.Suspense fallback={<LoadingFallback />}>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/shop-app" element={<AppShop />} />
-                  <Route path="/shop-web" element={<WebShop />} />
-                  <Route path="/product/:type/:id" element={<ProductDetail />} />
-                  <Route path="/book-meet" element={<BookMeet />} />
-                  <Route path="/admin" element={<Admin />} />
-                  <Route path="/blog" element={<Blog />} />
-                  <Route path="/blog/:id" element={<BlogPost />} />
-                  <Route path="/terms" element={<Terms />} />
-                  <Route path="/privacy" element={<Privacy />} />
-                </Routes>
-              </React.Suspense>
-            </main>
-            <Footer />
-          </div>
-        </BrowserRouter>
-      </LazyMotion>
-    </AuthProvider>
+              <Navbar />
+              <main>
+                <React.Suspense fallback={<LoadingFallback />}>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/shop-app" element={<AppShop />} />
+                    <Route path="/shop-web" element={<WebShop />} />
+                    <Route path="/product/:type/:id" element={<ProductDetail />} />
+                    <Route path="/book-meet" element={<BookMeet />} />
+                    <Route path="/admin" element={<Admin />} />
+                    <Route path="/blog" element={<Blog />} />
+                    <Route path="/blog/:id" element={<BlogPost />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="/privacy" element={<Privacy />} />
+                  </Routes>
+                </React.Suspense>
+              </main>
+              <Footer />
+            </div>
+          </BrowserRouter>
+        </LazyMotion>
+      </AuthProvider>
+    </HelmetProvider>
   );
 }
 

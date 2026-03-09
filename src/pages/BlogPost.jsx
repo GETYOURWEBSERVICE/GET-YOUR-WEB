@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { Calendar, User, ChevronLeft, Clock } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const BlogPost = () => {
     const { id } = useParams();
@@ -37,6 +38,13 @@ const BlogPost = () => {
 
     return (
         <div className="section" style={{ paddingTop: 'clamp(8rem, 15vh, 10rem)' }}>
+            <SEO
+                title={post.title}
+                description={post.excerpt || post.content?.substring(0, 160).replace(/<[^>]+>/g, '') || "Read the latest insights from Get Your Web."}
+                image={post.image}
+                type="article"
+                url={`https://getyourweb.qzz.io/blog/${id}`}
+            />
             <div className="container" style={{ maxWidth: '800px' }}>
                 <Link to="/blog" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'hsl(var(--primary))', fontWeight: 600, marginBottom: '2rem' }}>
                     <ChevronLeft size={20} /> Back to Insights

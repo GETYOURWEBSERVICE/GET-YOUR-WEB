@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Globe, Layout, Search, ShoppingBag, ArrowRight, Zap, Target, Layers, Loader2 } from 'lucide-react';
 import { db } from '../firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import SEO from '../components/SEO';
 
 const WebShop = () => {
     const navigate = useNavigate();
@@ -50,6 +51,12 @@ const WebShop = () => {
 
     return (
         <div className="page-container" style={{ paddingTop: 'clamp(6rem, 12vh, 8rem)', paddingBottom: '5rem' }}>
+            <SEO
+                title="Web Design & Development Shop"
+                description="Explore premium website templates and high-conversion web development services by Get Your Web. Dominate your market."
+                keywords="web design shop, website templates, buy website, professional web services, e-commerce websites"
+                url="https://getyourweb.qzz.io/shop-web"
+            />
             <div className="container">
                 <header style={{ marginBottom: '2rem', textAlign: 'left' }}>
                     <m.p

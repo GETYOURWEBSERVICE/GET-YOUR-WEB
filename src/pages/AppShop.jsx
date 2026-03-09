@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Smartphone, Zap, Shield, Cpu, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
 import { db } from '../firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import SEO from '../components/SEO';
 
 const AppShop = () => {
     const navigate = useNavigate();
@@ -50,6 +51,12 @@ const AppShop = () => {
 
     return (
         <div className="page-container" style={{ paddingTop: 'clamp(6rem, 12vh, 8rem)', paddingBottom: '5rem' }}>
+            <SEO
+                title="App Development Shop"
+                description="Browse our collection of high-performance custom application templates and features. Fast, secure, and ready to scale."
+                keywords="app development, custom apps, web apps, SaaS tools, Get Your Web apps"
+                url="https://getyourweb.qzz.io/shop-app"
+            />
             {/* Background Accents */}
             <div style={{
                 position: 'fixed',

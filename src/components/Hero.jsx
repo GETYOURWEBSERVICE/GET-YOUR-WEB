@@ -140,8 +140,8 @@ const Hero = () => {
                         color: 'hsl(var(--foreground))',
                         lineHeight: 1.1
                     }}>
-                        Elevate Your <br />
-                        <span className="gradient-text" style={{ fontStyle: 'italic', fontWeight: 400, paddingRight: '0.15em' }}>Experience</span>
+                        Get Your Web <br />
+                        <span className="gradient-text" style={{ fontStyle: 'italic', fontWeight: 400, paddingRight: '0.15em' }}>Expert Digital Solutions</span>
                     </h1>
 
                     <p style={{

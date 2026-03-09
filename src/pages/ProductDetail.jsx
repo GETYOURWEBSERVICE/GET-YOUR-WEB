@@ -4,6 +4,7 @@ import { m } from 'framer-motion';
 import { Globe, Smartphone, ArrowLeft, ExternalLink, ShoppingBag, CheckCircle2, Loader2, Sparkles, Shield, Zap } from 'lucide-react';
 import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import SEO from '../components/SEO';
 
 const ProductDetail = () => {
     const { type, id } = useParams();
@@ -57,6 +58,12 @@ const ProductDetail = () => {
 
     return (
         <div className="page-container" style={{ paddingTop: 'clamp(6rem, 12vh, 8rem)', paddingBottom: '5rem' }}>
+            <SEO
+                title={`${title} - Premium Digital Product`}
+                description={product.description?.substring(0, 160) || `Buy ${title} by Get Your Web. Premium digital product for your business.`}
+                image={product.image}
+                url={`https://getyourweb.qzz.io/product/${type}/${id}`}
+            />
             <div className="container">
                 <m.button
                     initial={{ opacity: 0, x: -20 }}

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { Calendar, User, ArrowRight, BookOpen } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const Blog = () => {
     const [posts, setPosts] = useState([]);
@@ -32,7 +33,13 @@ const Blog = () => {
     );
 
     return (
-        <div className="section" style={{ minHeight: '80vh', paddingTop: 'clamp(8rem, 15vh, 10rem)' }}>
+        <section className="section" style={{ minHeight: '80vh', paddingTop: 'clamp(8rem, 15vh, 10rem)' }}>
+            <SEO
+                title="Blog & Insights"
+                description="Read our latest insights on web development, modern design trends, and business strategies. Stay ahead in the digital world with Get Your Web."
+                keywords="web development blog, tech insights, design trends, Get Your Web blog, digital strategy"
+                url="https://getyourweb.qzz.io/blog"
+            />
             <div className="container">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                     <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 4rem)', marginBottom: '1rem' }}>Our <span className="gradient-text">Insights</span></h1>
@@ -84,7 +91,7 @@ const Blog = () => {
                     </div>
                 )}
             </div>
-        </div>
+        </section>
     );
 };
 
