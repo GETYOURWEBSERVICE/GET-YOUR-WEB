@@ -85,12 +85,17 @@ const ProductDetail = () => {
                         className="glass-card"
                         style={{ padding: '1rem', borderRadius: '2rem', overflow: 'hidden' }}
                     >
-                        <img
-                            src={product.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"}
-                            alt={title}
-                            onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" }}
-                            style={{ width: '100%', borderRadius: '1.5rem', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
-                        />
+                        <div style={{ overflow: 'hidden', borderRadius: '1.5rem', maxHeight: '600px', cursor: 'pointer' }}>
+                            <m.img
+                                initial={{ y: 0 }}
+                                whileHover={{ y: '-60%' }}
+                                transition={{ duration: 5, ease: "linear" }}
+                                src={product.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"}
+                                alt={title}
+                                onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" }}
+                                style={{ width: '100%', height: 'auto', display: 'block' }}
+                            />
+                        </div>
                     </m.div>
 
                     {/* Right: Info */}

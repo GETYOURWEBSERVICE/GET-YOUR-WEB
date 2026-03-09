@@ -1,10 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
+import { db } from '../firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
-import { Briefcase, Loader2 } from 'lucide-react';
+import { Briefcase, Loader2, ArrowUpRight } from 'lucide-react';
 
 const Work = () => {
-    const [projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState([
+        {
+            id: 'sample-1',
+            title: 'Modern E-commerce Platform',
+            category: 'Web Development',
+            description: 'A high-performance online store with seamless checkout and inventory management.',
+            image: 'https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&q=80&w=1600'
+        },
+        {
+            id: 'sample-2',
+            title: 'Fintech Dashboard',
+            category: 'UI/UX Design',
+            description: 'Complex data visualization and real-time analytics for financial institutions.',
+            image: 'https://images.unsplash.com/photo-1551288049-bbdac8626ad1?auto=format&fit=crop&q=80&w=1600'
+        },
+        {
+            id: 'sample-3',
+            title: 'Real Estate Portal',
+            category: 'Web Solution',
+            description: 'Advanced property search and virtual tours for the luxury housing market.',
+            image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=1600'
+        }
+    ]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -16,7 +39,9 @@ const Work = () => {
                     id: doc.id,
                     ...doc.data()
                 }));
-                setProjects(fetchedProjects);
+                if (fetchedProjects.length > 0) {
+                    setProjects(fetchedProjects);
+                }
             } catch (error) {
                 console.error("Error fetching projects:", error);
             }
@@ -67,14 +92,19 @@ const Work = () => {
                                 className="glass-card"
                                 style={{ padding: '0', overflow: 'hidden', cursor: 'pointer' }}
                             >
-                                <div style={{ overflow: 'hidden', aspectRatio: '16/10' }}>
+                                <div style={{
+                                    overflow: 'hidden',
+                                    aspectRatio: '16/10',
+                                    borderBottom: '1px solid hsla(var(--border), 0.1)'
+                                }}>
                                     <m.img
-                                        whileHover={{ scale: 1.05 }}
-                                        transition={{ duration: 0.6 }}
+                                        initial={{ y: 0 }}
+                                        whileHover={{ y: '-70%' }}
+                                        transition={{ duration: 4, ease: "linear" }}
                                         src={project.image}
                                         alt={project.title}
                                         loading="lazy"
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        style={{ width: '100%', height: 'auto', display: 'block' }}
                                     />
                                 </div>
                                 <div style={{ padding: 'clamp(1.5rem, 5vw, 2.5rem)' }}>

@@ -145,11 +145,24 @@ const AppShop = () => {
                                     borderRadius: '12px'
                                 }}>
                                     {/* Product Image Area */}
-                                    <div style={{ aspectRatio: '1/1', overflow: 'hidden', position: 'relative', background: '#f8f8f8' }}>
+                                    <div style={{
+                                        aspectRatio: '16/10',
+                                        overflow: 'hidden',
+                                        position: 'relative',
+                                        background: '#f8f8f8',
+                                        borderBottom: '1px solid hsla(var(--border), 0.2)'
+                                    }}>
                                         <m.img
                                             src={pkg.image}
                                             alt={pkg.title || pkg.name}
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                            initial={{ y: 0 }}
+                                            whileHover={{ y: '-70%' }}
+                                            transition={{ duration: 4, ease: "linear" }}
+                                            style={{
+                                                width: '100%',
+                                                height: 'auto',
+                                                display: 'block'
+                                            }}
                                         />
                                         {pkg.highlight && (
                                             <div style={{

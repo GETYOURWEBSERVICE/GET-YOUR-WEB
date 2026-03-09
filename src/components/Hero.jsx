@@ -161,14 +161,7 @@ const Hero = () => {
                             whileHover={{ scale: 1.05, boxShadow: '0 15px 30px hsla(45, 100%, 50%, 0.4)' }}
                             whileTap={{ scale: 0.95 }}
                             className="btn-primary"
-                            onClick={() => {
-                                const el = document.getElementById('work');
-                                if (el) {
-                                    el.scrollIntoView({ behavior: 'smooth' });
-                                } else {
-                                    navigate('/#work');
-                                }
-                            }}
+                            onClick={() => navigate('/shop-web')}
                         >
                             Shop Projects
                         </m.button>
