@@ -134,7 +134,7 @@ const Hero = () => {
                     {/* Tagline removed as per request */}
 
                     <h1 style={{
-                        fontSize: 'clamp(2.5rem, 8vw, 6rem)',
+                        fontSize: 'clamp(2rem, 8vw, 6rem)',
                         marginBottom: '1rem',
                         letterSpacing: '-0.02em',
                         color: 'hsl(var(--foreground))',

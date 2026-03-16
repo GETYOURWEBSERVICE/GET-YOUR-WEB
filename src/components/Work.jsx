@@ -76,7 +76,7 @@ const Work = () => {
                     </h2>
                 </div>
 
-                <div className={displayProjects.length > 0 ? "grid-cols-2" : ""} style={{ gap: '3.5rem' }}>
+                <div className={displayProjects.length > 0 ? "grid-cols-2" : ""}>
                     {loading ? (
                         <div style={{ display: 'flex', justifyContent: 'center', padding: '5rem' }}>
                             <Loader2 size={40} className="animate-spin" color="hsl(var(--primary))" />

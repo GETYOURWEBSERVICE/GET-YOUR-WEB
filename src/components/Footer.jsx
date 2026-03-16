@@ -10,7 +10,7 @@ const Footer = () => {
             paddingBottom: '4rem'
         }}>
             <div className="container">
-                <div className="grid-cols-2" style={{ gap: '6rem' }}>
+                <div className="footer-grid">
                     <div>
                         <motion.div
                             initial={{ opacity: 0 }}
@@ -61,18 +61,9 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div style={{
-                    marginTop: '6rem',
-                    paddingTop: '2.5rem',
-                    borderTop: '1px solid hsla(0,0%,100%,0.1)',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    fontSize: '0.9rem',
-                    color: 'hsla(0,0%,100%,0.4)'
-                }}>
+                <div className="footer-bottom">
                     <p>© 2026 Get Your Web. Digital Excellence by Bhavya Saxena.</p>
-                    <div style={{ display: 'flex', gap: '2rem' }}>
+                    <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center' }}>
                         <span>Jhansi 284003</span>
                     </div>
                 </div>

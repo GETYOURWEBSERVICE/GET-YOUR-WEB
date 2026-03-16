@@ -38,6 +38,12 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  width: 100%;
+}
+
+.app-container {
+  overflow-x: hidden;
+  width: 100%;
 }
 
 h1,
@@ -151,10 +157,39 @@ button {
   gap: 3rem;
 }
 
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+}
+
+.footer-bottom {
+  margin-top: 6rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid hsla(0,0%,100%,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: hsla(0,0%,100%,0.4);
+}
+
 @media (max-width: 768px) {
   .grid-cols-2 {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+    margin-top: 4rem;
   }
 
   .section {
