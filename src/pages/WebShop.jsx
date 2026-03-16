@@ -236,7 +236,7 @@ const WebShop = () => {
                     )}
                 </div>
 
-                <div style={{ marginTop: '8rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }} className="mobile-stack">
+                <div className="grid-cols-2 mobile-stack" style={{ marginTop: '8rem', alignItems: 'center' }}>
                     <m.div
                         initial={{ opacity: 0, x: -50 }}
                         whileInView={{ opacity: 1, x: 0 }}
